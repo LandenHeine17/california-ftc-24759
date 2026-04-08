@@ -9,20 +9,20 @@ public class Drivetrain {
         robot = passedRobot;
     }
 
-   public void robotBasedMovement(Gamepad gp) {
+    public void robotBasedMovement(Gamepad gp) {
         double forward = gp.right_stick_y;
         double rotate = gp.left_stick_x;
         double strafe = gp.right_stick_x;
 
-        double frontLeft = forward + rotate + strafe;
-        double frontRight = forward - rotate - strafe;
-        double backLeft = forward + rotate - strafe;
-        double backRight = forward - rotate + strafe;
+        double frontLeft = forward - rotate - strafe;
+        double frontRight = forward + rotate - strafe;
+        double backLeft = forward - rotate + strafe;
+        double backRight = forward + rotate + strafe;
 
         robot.frontLeft.setPower(frontLeft);
         robot.frontRight.setPower(frontRight);
         robot.backLeft.setPower(backLeft);
         robot.backRight.setPower(backRight);
-   }
+    }
 }
 

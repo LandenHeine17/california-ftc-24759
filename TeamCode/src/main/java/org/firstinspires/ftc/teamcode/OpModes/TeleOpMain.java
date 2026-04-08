@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.Hardware.Drivetrain;
+import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.LauncherController;
 import org.firstinspires.ftc.teamcode.Hardware.RobotHardware;
 
 import java.util.ArrayList;
@@ -15,6 +17,8 @@ import java.util.List;
 public class TeleOpMain extends OpMode {
     private RobotHardware robot;
     private Drivetrain drivetrain;
+    private Intake intake;
+    private LauncherController launcher;
     int index = 0;
     List<DcMotor> motors = new ArrayList<>();
     List<String> motorNames = new ArrayList<>();
@@ -22,6 +26,8 @@ public class TeleOpMain extends OpMode {
     public void init() {
         robot = new RobotHardware(hardwareMap);
         drivetrain = new Drivetrain(robot);
+        intake = new Intake(robot);
+        launcher = new LauncherController(robot);
 
         motors.add(robot.frontLeft);
         motors.add(robot.frontRight);
@@ -42,25 +48,29 @@ public class TeleOpMain extends OpMode {
 
     @Override
     public void loop() {
-        if (gamepad1.aWasPressed()) {
-            index += 1;
-            if (index >= motors.size()) {
-                index = 0;
-            }
-        }
-
-        robot.flywheel.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
-        motors.get(index).setPower(gamepad1.right_trigger - gamepad1.left_trigger);
-
-        for (int i = 0; i < motors.size(); i++) {
-            if (i == index) {
-                telemetry.addLine(">  "+motorNames.get(i));
-            } else {
-                telemetry.addLine(" "+motorNames.get(i));
-            }
-        }
+//        if (gamepad1.aWasPressed()) {
+//            index += 1;
+//            if (index >= motors.size()) {
+//                index = 0;
+//            }
+//        }
+//
+//        robot.flywheel.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
+//        motors.get(index).setPower(gamepad1.right_trigger - gamepad1.left_trigger);
+//
+//        for (int i = 0; i < motors.size(); i++) {
+//            if (i == index) {
+//                telemetry.addLine(">  "+motorNames.get(i));
+//            } else {
+//                telemetry.addLine(" "+motorNames.get(i));
+//            }
+//        }
 
         drivetrain.robotBasedMovement(gamepad1);
+        intake.intake(gamepad2);
+        launcher.basicLaunch(gamepad2);
+        intake.feeder(gamepad2);
+
 
         telemetry.update();
     }
