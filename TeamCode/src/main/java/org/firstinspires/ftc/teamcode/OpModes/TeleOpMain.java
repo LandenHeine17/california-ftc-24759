@@ -70,6 +70,7 @@ public class TeleOpMain extends OpMode {
         intake.intake(gamepad2);
         launcher.basicLaunch(gamepad2);
         intake.feeder(gamepad2);
+        launcher.hood(gamepad2);
 
 
         telemetry.update();

@@ -1,16 +1,20 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class RobotHardware {
     public DcMotor frontLeft, frontRight, backLeft, backRight;
     public DcMotor intake, feeder, turret;
     public DcMotorEx flywheel;
+    public Servo hoodServo;
+    public CRServo feedingServo;
     public Limelight3A limelight;
     public IMU imu;
 
@@ -26,6 +30,8 @@ public class RobotHardware {
         this.feeder = hardwareMap.get(DcMotor.class, "feeder");
         this.flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
         this.turret = hardwareMap.get(DcMotor.class, "turret");
+        this.hoodServo = hardwareMap.get(Servo.class, "hoodServo");
+        this.feedingServo = hardwareMap.get(CRServo.class, "feedingServo");
 
         // set drivetrain
         this.frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -51,7 +57,7 @@ public class RobotHardware {
         this.feeder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         this.feeder.setDirection(DcMotor.Direction.REVERSE);
 
-        //Intake
+        // Intake
         this.intake.setDirection(DcMotor.Direction.REVERSE);
     }
 }

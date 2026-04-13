@@ -8,6 +8,7 @@ public class LauncherController {
     public LauncherController(RobotHardware passedRobot) {
         robot = passedRobot;
     }
+    double hoodPos = 0.0;
 
     public void basicLaunch(Gamepad gp) {
         double flywheelSpeed = gp.right_trigger * -1;
@@ -16,6 +17,15 @@ public class LauncherController {
         // Right now there is no reverse so we don't launch into the robot
         robot.flywheel.setPower(flywheelSpeed);
         robot.turret.setPower(turretRotate);
+    }
 
+    public void hood(Gamepad gp) {
+        if (gp.b) {
+            hoodPos -= 0.01;
+        } else if (gp.a) {
+            hoodPos += 0.01;
+        }
+
+        robot.hoodServo.setPosition(hoodPos);
     }
 }
