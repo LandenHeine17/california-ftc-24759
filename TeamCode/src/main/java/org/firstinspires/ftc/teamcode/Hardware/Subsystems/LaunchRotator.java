@@ -59,33 +59,26 @@ public class LaunchRotator {
 
             if (currentPosition > rotateMax) {
                 if (foundTag) {
-                    if (tx < 0) {
-                        lastTx = tx;
-                    } else {
+                    if (tx > 0) {
                         tx = 0;
                     }
                 } else {
                     tx = -20;
-                    lastTx = tx;
                 }
             } else if (currentPosition < rotateMin) {
                 if (foundTag) {
-                    if (tx > 0) {
-                        lastTx = tx;
-                    } else {
+                    if (tx < 0) {
                         tx = 0;
                     }
                 } else {
                     tx = 20;
-                    lastTx = tx;
                 }
             } else {
-                if (foundTag) {
-                    lastTx = tx;
-                } else {
+                if (!foundTag) {
                     tx = lastTx;
                 }
             }
+            lastTx = tx;
             double dt = tickTimer.milliseconds() - lastTime;
             lastTime = tickTimer.milliseconds();
             double velocity = (tx - lastPosition) / dt;
