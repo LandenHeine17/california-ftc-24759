@@ -1,77 +1,58 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.Hardware.Drivetrain;
-import org.firstinspires.ftc.teamcode.Hardware.Intake;
-import org.firstinspires.ftc.teamcode.Hardware.LauncherController;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.LaunchRotator;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeController;
 import org.firstinspires.ftc.teamcode.Hardware.RobotHardware;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.firstinspires.ftc.teamcode.Software.Subsystems.Limelight;
+import org.firstinspires.ftc.teamcode.Software.Subsystems.TelemetryManager;
 
 @TeleOp
 public class TeleOpMain extends OpMode {
-    private RobotHardware robot;
+    private RobotHardware rob;
+    private TelemetryManager tel;
     private Drivetrain drivetrain;
+    private LaunchRotator turret;
+    private Limelight limelight;
     private Intake intake;
-    private LauncherController launcher;
-    int index = 0;
-    List<DcMotor> motors = new ArrayList<>();
-    List<String> motorNames = new ArrayList<>();
+    private OuttakeController outtake;
+    private LLResult llInfo;
     @Override
     public void init() {
-        robot = new RobotHardware(hardwareMap);
-        drivetrain = new Drivetrain(robot);
-        intake = new Intake(robot);
-        launcher = new LauncherController(robot);
+        tel = new TelemetryManager(telemetry);
+        rob = new RobotHardware(hardwareMap);
 
-        motors.add(robot.frontLeft);
-        motors.add(robot.frontRight);
-        motors.add(robot.backLeft);
-        motors.add(robot.backRight);
-        motors.add(robot.intake);
-        motors.add(robot.feeder);
-        motors.add(robot.turret);
+        limelight = new Limelight(rob, tel);
+        drivetrain = new Drivetrain(rob, tel);
+        intake = new Intake(rob, tel);
+        outtake = new OuttakeController(rob, tel);
+        turret = new LaunchRotator(rob, tel);
 
-        motorNames.add("frontLeft");
-        motorNames.add("frontRight");
-        motorNames.add("backLeft");
-        motorNames.add("backRight");
-        motorNames.add("intake");
-        motorNames.add("feeder");
-        motorNames.add("turret");
+    }
+    public void start() {
+        limelight.start(0);
     }
 
     @Override
     public void loop() {
-//        if (gamepad1.aWasPressed()) {
-//            index += 1;
-//            if (index >= motors.size()) {
-//                index = 0;
-//            }
-//        }
-//
-//        robot.flywheel.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
-//        motors.get(index).setPower(gamepad1.right_trigger - gamepad1.left_trigger);
-//
-//        for (int i = 0; i < motors.size(); i++) {
-//            if (i == index) {
-//                telemetry.addLine(">  "+motorNames.get(i));
-//            } else {
-//                telemetry.addLine(" "+motorNames.get(i));
-//            }
-//        }
+        llInfo = limelight.getInfo();
 
         drivetrain.robotBasedMovement(gamepad1);
         intake.intake(gamepad2);
-        launcher.basicLaunch(gamepad2);
         intake.feeder(gamepad2);
-        launcher.hood(gamepad2);
+        outtake.controlFlywheel(gamepad2);
+        outtake.hood(gamepad2);
 
+        turret.controlLaunchRotate(gamepad1, llInfo);
+        telemetry.addData("Tx", llInfo.getTx());
+        telemetry.addData("Ty", llInfo.getTy());
+        telemetry.addData("Ta", llInfo.getTa());
+        telemetry.addData("Angle", rob.turret.getCurrentPosition());
 
         telemetry.update();
     }

@@ -1,22 +1,25 @@
-package org.firstinspires.ftc.teamcode.Hardware;
+package org.firstinspires.ftc.teamcode.Hardware.Subsystems;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-public class LauncherController {
-    RobotHardware robot;
+import org.firstinspires.ftc.teamcode.Hardware.RobotHardware;
+import org.firstinspires.ftc.teamcode.Software.Subsystems.TelemetryManager;
 
-    public LauncherController(RobotHardware passedRobot) {
+public class OuttakeController {
+    RobotHardware robot;
+    TelemetryManager tel;
+
+    public OuttakeController(RobotHardware passedRobot, TelemetryManager passedTel) {
         robot = passedRobot;
+        tel = passedTel;
     }
     double hoodPos = 0.0;
 
-    public void basicLaunch(Gamepad gp) {
+    public void controlFlywheel(Gamepad gp) {
         double flywheelSpeed = gp.right_trigger * -1;
-        double turretRotate = gp.left_stick_x;
 
         // Right now there is no reverse so we don't launch into the robot
         robot.flywheel.setPower(flywheelSpeed);
-        robot.turret.setPower(turretRotate);
     }
 
     public void hood(Gamepad gp) {

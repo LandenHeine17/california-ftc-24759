@@ -1,12 +1,17 @@
-package org.firstinspires.ftc.teamcode.Hardware;
+package org.firstinspires.ftc.teamcode.Hardware.Subsystems;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.Hardware.RobotHardware;
+import org.firstinspires.ftc.teamcode.Software.Subsystems.TelemetryManager;
+
 public class Drivetrain {
     RobotHardware robot;
+    TelemetryManager tel;
 
-    public Drivetrain(RobotHardware passedRobot) {
+    public Drivetrain(RobotHardware passedRobot, TelemetryManager passedTel) {
         robot = passedRobot;
+        tel = passedTel;
     }
 
     public void robotBasedMovement(Gamepad gp) {

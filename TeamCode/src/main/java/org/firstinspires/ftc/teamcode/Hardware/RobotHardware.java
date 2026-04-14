@@ -45,6 +45,7 @@ public class RobotHardware {
         this.turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         this.turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.turret.setDirection(DcMotor.Direction.REVERSE);
 
         // launch motor
         this.flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -59,5 +60,8 @@ public class RobotHardware {
 
         // Intake
         this.intake.setDirection(DcMotor.Direction.REVERSE);
+
+        // Limelight
+        this.limelight = hardwareMap.get(Limelight3A.class, "limelight");
     }
 }
