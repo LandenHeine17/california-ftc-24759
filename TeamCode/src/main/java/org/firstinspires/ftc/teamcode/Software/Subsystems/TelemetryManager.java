@@ -25,6 +25,10 @@ public class TelemetryManager {
         telemetry.addData(caption, value);
     }
 
+    public void log(String line) {
+        telemetry.addLine(line);
+    }
+
     public void log(String caption, String format, Object... args) {
         telemetry.addData(caption, String.format(format, args));
     }

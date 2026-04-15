@@ -49,10 +49,11 @@ public class TeleOpMain extends OpMode {
         outtake.hood(gamepad2);
 
         turret.controlLaunchRotate(gamepad1, llInfo);
+
         telemetry.addData("Tx", llInfo.getTx());
         telemetry.addData("Ty", llInfo.getTy());
         telemetry.addData("Ta", llInfo.getTa());
-        telemetry.addData("Angle", rob.turret.getCurrentPosition());
+        telemetry.addData("Is valid: ", llInfo.isValid());
 
         telemetry.update();
     }
