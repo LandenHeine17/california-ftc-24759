@@ -16,7 +16,8 @@ public class OuttakeController {
     double hoodPos = 0.0;
 
     public void controlFlywheel(Gamepad gp) {
-        double flywheelSpeed = gp.right_trigger * -1;
+        double flywheelSpeed = gp.right_stick_y * -1;
+        if (flywheelSpeed > 0) flywheelSpeed = 0;
 
         // Right now there is no reverse so we don't launch into the robot
         robot.flywheel.setPower(flywheelSpeed);

@@ -48,7 +48,7 @@ public class TeleOpMain extends OpMode {
         outtake.controlFlywheel(gamepad2);
         outtake.hood(gamepad2);
 
-        turret.controlLaunchRotate(gamepad1, llInfo);
+        turret.controlLaunchRotate(gamepad2, llInfo);
 
         telemetry.addData("Tx", llInfo.getTx());
         telemetry.addData("Ty", llInfo.getTy());

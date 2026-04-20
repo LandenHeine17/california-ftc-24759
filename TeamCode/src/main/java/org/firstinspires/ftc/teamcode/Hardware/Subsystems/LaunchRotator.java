@@ -81,7 +81,11 @@ public class LaunchRotator {
 
         tel.log("Step", step);
 
-        controlLaunchRotate(focusIsActive, llInfo, 0, Constants.LAUNCHROTATEMAX, Constants.LAUNCHROTATEMIN);
+        if (focusIsActive) {
+            controlLaunchRotate(focusIsActive, llInfo, 0, Constants.LAUNCHROTATEMAX, Constants.LAUNCHROTATEMIN);
+        } else {
+            rob.turret.setPower(gp.right_stick_x/4);
+        }
     }
 
     public void controlLaunchRotate(boolean focusing, LLResult llInfo, double offset, double rotateMax, double rotateMin) {
