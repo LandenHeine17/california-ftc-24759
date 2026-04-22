@@ -4,6 +4,9 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+
 import org.firstinspires.ftc.teamcode.Hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.Software.Constants;
 import org.firstinspires.ftc.teamcode.Software.Subsystems.TelemetryManager;
@@ -13,19 +16,19 @@ public class LaunchRotator {
     RobotHardware rob;
     TelemetryManager tel;
     private static ElapsedTime tickTimer;
-
+    private final FtcDashboard dashboard = FtcDashboard.getInstance();
     public Boolean focusIsActive = false;
     // =========== initializations ===========
     double lastPosition = 0;
     double lastTx;
     double lastTime = 0;
-    double integral = 0;                double integralMax = 1000;
+    double integral = 0;                double integralMax = 250;
     double velocityFiltered = 0;        double alpha = 0.15; // low pass filter
 
     // PID & tuning
     int pidSelect = 0; // 0=P, 1=I, 2=D
     double step = 0.0001; // default step
-    double kP = 0.012;          double kD = 0.0002;        double kI = 0.00001;
+    double kP = 0.013;          double kD = -0.15;        double kI = 0.00001;
 
 
 
@@ -88,10 +91,16 @@ public class LaunchRotator {
         }
     }
 
+
+
     public void controlLaunchRotate(boolean focusing, LLResult llInfo, double offset, double rotateMax, double rotateMin) {
         // get motor and tag positions
         double tx = llInfo.getTx();
+        tx = (Math.abs(tx) < 1.5) ? 0 : tx;
         double currentPosition = rob.turret.getCurrentPosition();
+
+        // flag to stop rotation
+        double isMoving = 1;
 
         // telemetry
         tel.log("\n ===== Launcher ==== \nLauncher focusing", focusIsActive ? "Yes" : "NO");
@@ -104,13 +113,16 @@ public class LaunchRotator {
 
             if (foundTag) {
                 if (currentPosition > rotateMax || currentPosition < rotateMin) {
+                    isMoving = 0;
                     tx = 0;
                 }
             } else {
                 if (currentPosition > rotateMax) {
-                    tx = 20;
-                } else if (currentPosition < rotateMin) {
                     tx = -20;
+                    isMoving = 0;
+                } else if (currentPosition < rotateMin) {
+                    tx = 20;
+                    isMoving = 0;
                 } else {
                     tx = lastTx;
                 }
@@ -139,8 +151,8 @@ public class LaunchRotator {
 
             // define PID terms
             double pTerm = kP * error;
-            double iTerm = kI * integral;
-            double dTerm = kD * velocityFiltered;
+            double iTerm = kI * integral * isMoving;
+            double dTerm = kD * velocityFiltered * isMoving;
             // define power
             double power = pTerm + iTerm + dTerm;
 
@@ -151,8 +163,55 @@ public class LaunchRotator {
             tel.log("dt (ms)", dt);
             tel.log("Rotate Power", power);
 
+
+
+            // FTC Dashboard telemetry
+            TelemetryPacket packet = new TelemetryPacket();
+
+            // PID selection display
+            String[] names = {"kP", "kI", "kD"};
+            double[] vals = {kP, kI, kD};
+            for (int i = 0; i < 3; i++) {
+                String indicator = (i == pidSelect) ? " > " : "   ";
+                packet.put(indicator + names[i], vals[i]);
+            }
+
+            // Step size
+            packet.put("Step", step);
+
+            // Focus state
+            packet.put("Focusing", focusing);
+            packet.put("Found Tag", llInfo.isValid());
+
+            // Raw sensor + logic values
+            packet.put("TX (raw)", llInfo.getTx());
+            packet.put("TX (used)", tx);
+            packet.put("Error", error);
+
+            // PID terms
+            packet.put("P Term", pTerm);
+            packet.put("I Term", iTerm);
+            packet.put("D Term", dTerm);
+
+            // Position + velocity
+            packet.put("Position", currentPosition);
+            packet.put("Velocity Raw", velocity);
+            packet.put("Velocity Filtered", velocityFiltered);
+
+            // Timing
+            packet.put("dt (ms)", dt);
+
+            // Output+
+            packet.put("Power Output", power);
+
+            // Send packet
+            dashboard.sendTelemetryPacket(packet);
+
+
+
             // set power
             rob.turret.setPower(power);
+            if (!foundTag) rob.turret.setPower(power);
         } else {
             // no power if not focusing
             rob.turret.setPower(0);

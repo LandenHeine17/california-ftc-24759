@@ -23,12 +23,20 @@ public class OuttakeController {
         robot.flywheel.setPower(flywheelSpeed);
     }
 
+    public void controlOuttake(Gamepad gp) {
+        // control outtake using AI model here
+    }
+
     public void hood(Gamepad gp) {
-        if (gp.b) {
-            hoodPos -= 0.01;
-        } else if (gp.a) {
-            hoodPos += 0.01;
+        if (gp.bWasPressed()) {
+            hoodPos -= 0.02;
+        } else if (gp.aWasPressed()) {
+            hoodPos += 0.02;
         }
+        if (hoodPos < 0) hoodPos = 0;
+        if (hoodPos > 1) hoodPos = 1;
+
+        tel.log("Hood Pos", hoodPos);
 
         robot.hoodServo.setPosition(hoodPos);
     }
