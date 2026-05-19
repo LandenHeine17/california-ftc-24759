@@ -13,6 +13,8 @@ import java.util.List;
 public class Checklist extends OpMode {
     private RobotHardware robot;
     int index = 0;
+    double stopperPos = 0.5;
+
     List<DcMotor> motors = new ArrayList<>();
     List<String> motorNames = new ArrayList<>();
     @Override
@@ -44,6 +46,7 @@ public class Checklist extends OpMode {
                 index = 0;
             }
         }
+        updateIncrementServo();
 
         robot.flywheel.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
         motors.get(index).setPower(gamepad1.right_trigger - gamepad1.left_trigger);
@@ -57,5 +60,14 @@ public class Checklist extends OpMode {
         }
 
         telemetry.update();
+    }
+
+    private void updateIncrementServo() {
+        if (gamepad1.bWasPressed()) stopperPos += 0.02;
+        if (gamepad1.xWasPressed()) stopperPos -= 0.02;
+
+        stopperPos = Math.max(0, Math.min(1, stopperPos));
+        robot.stopper.setPosition(stopperPos);
+        telemetry.addData("Stopper Pos", stopperPos);
     }
 }

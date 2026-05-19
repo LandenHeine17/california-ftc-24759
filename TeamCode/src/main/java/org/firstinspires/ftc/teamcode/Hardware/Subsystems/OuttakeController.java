@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Hardware.Subsystems;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.Hardware.RobotHardware;
+import org.firstinspires.ftc.teamcode.Software.Constants;
 import org.firstinspires.ftc.teamcode.Software.Subsystems.TelemetryManager;
 
 public class OuttakeController {
@@ -26,6 +27,15 @@ public class OuttakeController {
     public void controlOuttake(Gamepad gp) {
         // control outtake using AI model here
     }
+
+    public void controlStopper(Gamepad gp) {
+        if (gp.x || gp.a) {
+            robot.stopper.setPosition(Constants.STOPPEROPEN);
+        } else if (gp.b) {
+            robot.stopper.setPosition(Constants.STOPPERCLOSED);
+        }
+    }
+
 
     public void hood(Gamepad gp) {
         if (gp.bWasPressed()) {

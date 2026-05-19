@@ -13,7 +13,7 @@ public class RobotHardware {
     public DcMotor frontLeft, frontRight, backLeft, backRight;
     public DcMotor intake, feeder, turret;
     public DcMotorEx flywheel;
-    public Servo hoodServo;
+    public Servo hoodServo, stopper;
     public CRServo feedingServo;
     public Limelight3A limelight;
     public IMU imu;
@@ -25,13 +25,14 @@ public class RobotHardware {
         this.backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         this.backRight = hardwareMap.get(DcMotor.class, "backRight");
 
-        // Actuators
+        // Other Actuators
         this.intake = hardwareMap.get(DcMotor.class, "intake");
         this.feeder = hardwareMap.get(DcMotor.class, "feeder");
         this.flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
         this.turret = hardwareMap.get(DcMotor.class, "turret");
         this.hoodServo = hardwareMap.get(Servo.class, "hoodServo");
         this.feedingServo = hardwareMap.get(CRServo.class, "feedingServo");
+        this.stopper = hardwareMap.get(Servo.class, "stopper");
 
         // set drivetrain
         this.frontLeft.setDirection(DcMotor.Direction.REVERSE);

@@ -87,7 +87,7 @@ public class LaunchRotator {
         if (focusIsActive) {
             controlLaunchRotate(focusIsActive, llInfo, 0, Constants.LAUNCHROTATEMAX, Constants.LAUNCHROTATEMIN);
         } else {
-            rob.turret.setPower(gp.right_stick_x/4);
+            rob.turret.setPower(gp.right_stick_x*0.5);
         }
     }
 

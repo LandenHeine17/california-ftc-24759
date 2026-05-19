@@ -47,6 +47,7 @@ public class TeleOpMain extends OpMode {
         intake.feeder(gamepad2);
         outtake.controlFlywheel(gamepad2);
         outtake.hood(gamepad2);
+        outtake.controlStopper(gamepad2);
 
         turret.controlLaunchRotate(gamepad2, llInfo);
 

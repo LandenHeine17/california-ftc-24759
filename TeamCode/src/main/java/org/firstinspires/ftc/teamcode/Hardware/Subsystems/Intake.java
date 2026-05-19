@@ -22,10 +22,14 @@ public class Intake {
     }
 
     public void feeder(Gamepad gp) {
-        double feeder = gp.right_trigger - gp.left_trigger;
-
-        robot.feeder.setPower(feeder);
-        robot.feedingServo.setPower(-feeder);
+        if (gp.a) {
+            double feeder = 1;
+            robot.feeder.setPower(feeder);
+            robot.feedingServo.setPower(-feeder);
+        } else {
+            robot.feeder.setPower(0);
+            robot.feedingServo.setPower(0);
+        }
     }
 }
 
